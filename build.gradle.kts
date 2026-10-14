@@ -8,8 +8,14 @@ plugins {
 	id("net.kyori.blossom") version "2.2.0"
 }
 
-group = "org.mockbukkit.mockbukkit"
-version = getFullVersion()
+/*
+  On JitPack the group and version are passed in via -Pgroup/-Pversion (see jitpack.yml),
+  so they must not be overridden here.
+*/
+if (!isJitPack()) {
+	group = "org.mockbukkit.mockbukkit"
+	version = getFullVersion()
+}
 
 repositories {
 	mavenCentral()
@@ -236,9 +242,16 @@ fun isAction(): Boolean {
 	return System.getenv("GITHUB_ACTIONS") == "true" && System.getenv("GITHUB_REPOSITORY") == "MockBukkit/MockBukkit"
 }
 
+fun isJitPack(): Boolean {
+	return System.getenv("JITPACK") == "true"
+}
+
 fun getFullVersion(): String {
-	return if (isAction()) {
-		property("mockbukkit.version") as String
+	// PCX-Network fork: a non-blank mockbukkit.version is used for local builds too, so that
+	// publishToMavenLocal produces a stable, fork-specific version instead of dev-<commit>.
+	val configured = (findProperty("mockbukkit.version") as String?)?.trim().orEmpty()
+	return if (isAction() || configured.isNotEmpty()) {
+		configured
 	} else {
 		"dev-${run("git", "rev-parse", "--verify", "--short", "HEAD")}"
 	}

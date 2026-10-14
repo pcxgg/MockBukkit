@@ -1,4 +1,6 @@
-jdk:
-  - openjdk21
+# PCX-Network fork: MockBukkit for Paper 26.x needs JDK 25 (gradle.properties java.version=25).
+before_install:
+  - sdk install java 25.0.4-tem
+  - sdk use java 25.0.4-tem
 install:
-  - ./gradlew clean -Pgroup=com.github.MockBukkit -Pversion=$VERSION -xtest assemble publishToMavenLocal
+  - ./gradlew clean -Pgroup=com.github.PCX-Network.MockBukkit -Pversion=$VERSION -xtest :assemble :publishToMavenLocal
