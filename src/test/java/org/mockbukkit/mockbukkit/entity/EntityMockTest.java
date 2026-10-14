@@ -1,6 +1,8 @@
 package org.mockbukkit.mockbukkit.entity;
 
 import io.papermc.paper.math.Angle;
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -9,9 +11,12 @@ import org.bukkit.EntityEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.damage.DamageSource;
+import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -521,6 +526,56 @@ class EntityMockTest
 		assertFalse(entity.isInvulnerable());
 		entity.setInvulnerable(true);
 		assertTrue(entity.isInvulnerable());
+	}
+
+	@Test
+	void isMarkedInvulnerable_ReflectsFlag()
+	{
+		assertFalse(entity.isMarkedInvulnerable());
+		entity.setInvulnerable(true);
+		assertTrue(entity.isMarkedInvulnerable());
+		entity.setInvulnerable(false);
+		assertFalse(entity.isMarkedInvulnerable());
+	}
+
+	@Test
+	void isInvulnerableTo_NotInvulnerable_False()
+	{
+		assertFalse(entity.isInvulnerableTo(DamageSource.builder(DamageType.GENERIC).build()));
+	}
+
+	@Test
+	void isInvulnerableTo_Invulnerable_GenericDamage_True()
+	{
+		entity.setInvulnerable(true);
+		assertTrue(entity.isInvulnerableTo(DamageSource.builder(DamageType.GENERIC).build()));
+		assertTrue(entity.isInvulnerable());
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { "out_of_world", "generic_kill" })
+	void isInvulnerableTo_Invulnerable_BypassingDamage_False(String key)
+	{
+		DamageType type = RegistryAccess.registryAccess().getRegistry(RegistryKey.DAMAGE_TYPE).getOrThrow(NamespacedKey.minecraft(key));
+		entity.setInvulnerable(true);
+		assertFalse(entity.isInvulnerableTo(DamageSource.builder(type).build()));
+	}
+
+	@Test
+	void isInvulnerableTo_Invulnerable_CreativePlayer_False()
+	{
+		PlayerMock player = server.addPlayer();
+		entity.setInvulnerable(true);
+		DamageSource source = DamageSource.builder(DamageType.PLAYER_ATTACK).withDirectEntity(player).withCausingEntity(player).build();
+		assertTrue(entity.isInvulnerableTo(source));
+		player.setGameMode(GameMode.CREATIVE);
+		assertFalse(entity.isInvulnerableTo(source));
+	}
+
+	@Test
+	void isInvulnerableTo_Null_Throws()
+	{
+		assertThrows(IllegalArgumentException.class, () -> entity.isInvulnerableTo(null));
 	}
 
 	@Test

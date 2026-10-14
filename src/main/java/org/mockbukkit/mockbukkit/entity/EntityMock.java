@@ -17,14 +17,18 @@ import net.kyori.adventure.util.TriState;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.EntityEffect;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.PistonMoveReaction;
+import org.bukkit.damage.DamageSource;
+import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntitySnapshot;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Pose;
@@ -1151,9 +1155,27 @@ public abstract class EntityMock extends Entity.Spigot implements Entity, Messag
 	}
 
 	@Override
-	public boolean isInvulnerable()
+	public boolean isMarkedInvulnerable()
 	{
 		return invulnerable;
+	}
+
+	@Override
+	public boolean isInvulnerableTo(@NotNull DamageSource source)
+	{
+		Preconditions.checkArgument(source != null, "DamageSource cannot be null");
+		if (!invulnerable)
+		{
+			return false;
+		}
+		// Mirrors vanilla Entity#isInvulnerableToBase: the invulnerable flag is bypassed by damage types
+		// in the #bypasses_invulnerability tag (out_of_world, generic_kill) and by creative-mode players.
+		DamageType type = source.getDamageType();
+		if (type == DamageType.OUT_OF_WORLD || type == DamageType.GENERIC_KILL)
+		{
+			return false;
+		}
+		return !(source.getCausingEntity() instanceof HumanEntity human && human.getGameMode() == GameMode.CREATIVE);
 	}
 
 	@Override

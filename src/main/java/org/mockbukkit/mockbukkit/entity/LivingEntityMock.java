@@ -259,7 +259,7 @@ public abstract class LivingEntityMock extends EntityMock implements LivingEntit
 	@Override
 	public void damage(double amount, @Nullable Entity source)
 	{
-		if (isInvulnerable())
+		if (isMarkedInvulnerable())
 		{
 			if (source instanceof HumanEntity)
 			{

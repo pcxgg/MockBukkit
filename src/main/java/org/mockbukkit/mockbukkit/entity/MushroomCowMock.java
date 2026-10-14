@@ -170,7 +170,7 @@ public class MushroomCowMock extends AbstractCowMock implements MushroomCow
 		}
 
 		cow.setPersistent(this.isPersistent());
-		cow.setInvulnerable(this.isInvulnerable());
+		cow.setInvulnerable(this.isMarkedInvulnerable());
 
 		if (!new EntityTransformEvent(this, List.of(cow), EntityTransformEvent.TransformReason.SHEARED).callEvent())
 		{
