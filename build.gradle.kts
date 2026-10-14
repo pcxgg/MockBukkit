@@ -247,7 +247,7 @@ fun isJitPack(): Boolean {
 }
 
 fun getFullVersion(): String {
-	// PCX-Network fork: a non-blank mockbukkit.version is used for local builds too, so that
+	// pcxgg fork: a non-blank mockbukkit.version is used for local builds too, so that
 	// publishToMavenLocal produces a stable, fork-specific version instead of dev-<commit>.
 	val configured = (findProperty("mockbukkit.version") as String?)?.trim().orEmpty()
 	return if (isAction() || configured.isNotEmpty()) {

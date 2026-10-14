@@ -31,7 +31,7 @@ MockBukkit is a framework that makes the unit testing of Bukkit plugins a whole 
 It aims to be provide complete mock implementation of CraftBukkit that can be completely controlled from a unit test.
 
 > [!NOTE]
-> **PCX-Network fork.** This is a fork of [MockBukkit/MockBukkit](https://github.com/MockBukkit/MockBukkit).
+> **pcxgg fork.** This is a fork of [MockBukkit/MockBukkit](https://github.com/MockBukkit/MockBukkit).
 > Branch `minecraft/v26.3` is upstream's `upgrade/v26.3` work moved to Paper API `26.3.build.181-stable`
 > (build 181 adds `Entity#isMarkedInvulnerable` / `Entity#isInvulnerableTo(DamageSource)`), published as
 > `org.mockbukkit.mockbukkit:mockbukkit-v26.3:4.118.0-pcx.1`. It is not on Maven Central.
@@ -43,14 +43,14 @@ It aims to be provide complete mock implementation of CraftBukkit that can be co
 > dependencies { testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v26.3:4.118.0-pcx.1") }
 > ```
 >
-> JitPack (once the branch is pushed, or a tag such as `v4.118.0-pcx.1` exists on PCX-Network/MockBukkit):
+> JitPack (once the branch is pushed, or a tag such as `v4.118.0-pcx.1` exists on pcxgg/MockBukkit):
 >
 > ```kotlin
 > repositories { maven("https://jitpack.io"); maven("https://repo.papermc.io/repository/maven-public/") }
-> dependencies { testImplementation("com.github.PCX-Network.MockBukkit:mockbukkit-v26.3:<tag or minecraft~v26.3-SNAPSHOT>") }
+> dependencies { testImplementation("com.github.pcxgg.MockBukkit:mockbukkit-v26.3:<tag or minecraft~v26.3-SNAPSHOT>") }
 > ```
 >
-> JitPack builds with `jitpack.yml` (JDK 25 via SDKMAN) and publishes under the `com.github.PCX-Network.MockBukkit` group
+> JitPack builds with `jitpack.yml` (JDK 25 via SDKMAN) and publishes under the `com.github.pcxgg.MockBukkit` group
 > with the requested tag/commit as the version.
 
 ## :page_facing_up: Table of contents
